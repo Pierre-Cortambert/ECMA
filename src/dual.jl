@@ -1,0 +1,3 @@
+export Dual 
+
+function Dual()
