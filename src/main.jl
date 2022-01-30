@@ -1,3 +1,5 @@
+using JuMP
+using CPLEX
 
 action = Args.get(:action)
 
@@ -9,16 +11,18 @@ action == :heuristic      && @ms include("heuristic.jl")
 
 function main()
 
+
+    (n,s,t,S,d1,d2,p,ph,A,d,D)= get_data("../instances/20_USA-road-d.BAY.gr")
     time1 = time()
 
     action = Args.get(:action)
     println("action = $action")
 
     if action == :dual      
-
+        Dual(n,s,t,S,d1,d2,p,ph,A,d,D) 
     
     elseif action == :plans_coupants 
-    
+        PlansCoupants(n,s,t,S,d1,d2,p,ph,A,d,D)    
     
     elseif action == :branch_cut     
     

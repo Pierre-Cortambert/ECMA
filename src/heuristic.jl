@@ -1,3 +1,6 @@
+using JuMP
+using CPLEX
+
 export Heuristic
 
 
