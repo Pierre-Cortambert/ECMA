@@ -21,7 +21,7 @@ function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 
 	@constraint(m, sum(x[s,k]*A[s,k] for k in 1:n) == 1)
 	@constraint(m, sum(x[k,t]*A[k,t] for k in 1:n) == 1)
 
-	@constraint(m, k in 1:n*n, a0 + a[k] >= x[k])
+	@constraint(m,[ k in 1:n*n ], a0 + a[k] >= x[k])
 
 	#dual robust constraint
 	@constraint(m, b0*d2 + 2 * sum(b[k] for k in 1:n) + sum(p[i]*sum(x[i,j]*A[i,j] for j in 1:n) for i in 1:n) <= S)
