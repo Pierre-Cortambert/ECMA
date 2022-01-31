@@ -98,7 +98,7 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 
 	
 	#Objectif
-	@objective(m, Min, sum(sum(x[i,j]*d[i,j] for i in 1:n) for j in 1:n) + z)
+	@objective(m, Min, sum(x[i]*d[i] for i in 1:n*n) + z)
 
 	U_1=Array{Float64, 3}(zeros(2, n,n))
 	U_2=Array{Float64, 2}(zeros(2, n))
@@ -121,14 +121,14 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 		dlt1, z_1 = spo(n,x_opt,d1,d,D)
 		dlt2, z_2 = spc(n,t,x_opt,d2,ph)
 				
-		if z_1==z_opt && z_2 +  sum( sum(x_opt[i,j]*A[i,j]*p[i] for j in 1:n) for i in 1:n) + p[t] <= S 
+		if abs(z_1-z_opt)<1e-4 && z_2 +  sum( sum(x_opt[i,j]*A[i,j]*p[i] for j in 1:n) for i in 1:n) + p[t] <= S 
 			not_opti = false
 		else
 			if z_2 +  sum( sum(x_opt[i,j]*A[i,j]*p[i] for j in 1:n) for i in 1:n) + p[t] > S 
 				dlt2=reshape(dlt2,(1,n))
 				U_2 = vcat(dlt2,U_2)
 			end
-			if z_1 != z_opt
+			if abs(z_1-z_opt)>1e-4
 				dlt1=reshape(dlt1,(1,n,n))
 				U_1 = vcat(dlt1,U_1)
 			end
@@ -147,7 +147,13 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 		sol=vcat(sol,[i])
 	end
 	
-	sol
+	println("Solution: ", sol)
+	
+	status = termination_status(m)
+	isOptimal = status == MOI.OPTIMAL
+		
+	return isOptimal
+
 end
 
 
