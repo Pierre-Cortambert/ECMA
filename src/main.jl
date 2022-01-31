@@ -6,7 +6,7 @@ include("read_write.jl")
 include("static.jl")
 include("dual.jl")
 include("plans_coupants.jl")
-include("plan_coupants_knackpack.jl")
+include("plan_coupant_knackpack.jl")
 include("branch_cut.jl")
 include("heuristic.jl")
 
