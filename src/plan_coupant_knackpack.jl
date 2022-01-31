@@ -1,46 +1,6 @@
 using JuMP
 using CPLEX
 
-function get_data(file_name :: String)
-	if isfile(file_name)
-		file=open(file_name)
-		data = readlines(file)
-		
-		n=parse(Int64,data[1][5:end])
-		s=parse(Int64,data[2][5:end])
-		t=parse(Int64,data[3][5:end])
-		S=parse(Int64,data[4][5:end])
-		d1=parse(Int64,data[5][6:end])
-		d2=parse(Int64,data[6][6:end])
-		
-		int_tab_p=split(data[7][6:end-1],",")
-		int_tab_ph=split(data[8][7:end-1],",")
-		p=Vector{Int64}(zeros(n))
-		ph=Vector{Int64}(zeros(n))
-		for i in range(1,n)
-			p[i]=parse(Int64,int_tab_p[i])
-			ph[i]=parse(Int64,int_tab_ph[i])
-		end
-		
-		A=Array{Int64,2}(zeros(n,n))
-		d=Array{Int64,2}(zeros(n,n))
-		D=Array{Float64,2}(zeros(n,n))
-		for line in data[10:end]
-			tab=split(line[1:end-1]," ")
-			i=parse(Int64,tab[1])
-			j=parse(Int64,tab[2])
-			d_ij=parse(Int64,tab[3])
-			D_ij=parse(Float64,tab[4])
-			A[i,j]=1
-			d[i,j]=d_ij
-			D[i,j]=D_ij
-		end
-		
-	end
-	
-	return (n,s,t,S,d1,d2,p,ph,A,d,D)
-end
-
 function spo_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d1 :: Int64, d :: Array{Int64}, D :: Array{Float64})
 	sol=Vector{Int64}(zeros(2))
 	sol[1]=s
@@ -104,8 +64,8 @@ function spc_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d2 :: Int64,  ph :
 	return dlt, z
 end
 
-function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 :: Int64, p :: Vector{Int64}, ph :: Vector{Int64}, A :: Array{Int64}, d :: Array{Int64}, D :: Array{Float64})
-	
+function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 :: Int64, p :: Vector{Int64}, ph :: Vector{Int64}, A :: Array{Int64}, d :: Array{Int64}, D :: Array{Float64},  time_max :: Float64)
+	time1 = time()
 	m=Model(CPLEX.Optimizer)
 	set_silent(m)
 	
@@ -132,7 +92,8 @@ function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 ::
 	
 	not_opti = true  
 	cpt=0
-	while not_opti
+	time = round((time() - time1))
+	while not_opti && time < time_max 
 		cpt+=1
 		
 		#Constraint on cut set #1 
@@ -161,6 +122,7 @@ function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 ::
 				U_1 = vcat(dlt1,U_1)
 			end
 		end
+		time = round((time() - time1))
 	end
 	
 	println("Nombre de coupes: ",cpt)
@@ -180,11 +142,7 @@ function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 ::
 	status = termination_status(m)
 	isOptimal = status == MOI.OPTIMAL
 		
-	return isOptimal
+	return isOptimal, traj, sol, cpt # si solution, valeur, le chemin, nombre de coupes
 end
 
 
-
-(n,s,t,S,d1,d2,p,ph,A,d,D)=get_data("Instances_ECMA/40_USA-road-d.BAY.gr")
-
-println(plan_coupant_kp(n,s,t,S,d1,d2,p,ph,A,d,D))

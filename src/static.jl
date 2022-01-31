@@ -30,12 +30,21 @@ function Static(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d
 	optimize!(m)
 	println(solution_summary(m))
 
-	vX = JuMP.value.(x)
+	traj=JuMP.value.(x)
+	sol=Vector{Int64}(zeros(1))
+	i=s
+	sol[1]=s
+	while i!=t
+		i=findall(y->y==1., traj[i,:])[1,1]
+		sol=vcat(sol,[i])
+	end
+	
+	println("Solution: ", sol)
 
 	status = termination_status(m)
 	isOptimal = status == MOI.OPTIMAL
 		
-	return isOptimal
+	return isOptimal, traj, sol
 end
 
 
