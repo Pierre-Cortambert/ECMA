@@ -104,7 +104,7 @@ function spc_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d2 :: Int64,  ph :
 	return dlt, z
 end
 
-function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 :: Int64, p :: Vector{Int64}, ph :: Vector{Int64}, A :: Array{Int64}, d :: Array{Int64}, D :: Array{Float64})
+function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 :: Int64, p :: Vector{Int64}, ph :: Vector{Int64}, A :: Array{Int64}, d :: Array{Int64}, D :: Array{Float64})
 	
 	m=Model(CPLEX.Optimizer)
 	set_silent(m)
@@ -125,7 +125,7 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 
 	
 	#Objectif
-	@objective(m, Min, sum(sum(x[i,j]*d[i,j] for i in 1:n) for j in 1:n) + z)
+	@objective(m, Min, sum(x[i]*d[i] for i in 1:n*n) + z)
 
 	U_1=Array{Float64, 3}(zeros(2, n,n))
 	U_2=Array{Float64, 2}(zeros(2, n))
@@ -163,6 +163,9 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 		end
 	end
 	
+	println("Nombre de coupes: ",cpt)
+	println(solution_summary(m))
+	
 	traj=JuMP.value.(x)
 	sol=Vector{Int64}(zeros(1))
 	i=s
@@ -172,11 +175,16 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 		sol=vcat(sol,[i])
 	end
 	
-	sol
+	println("Solution: ", sol)
+	
+	status = termination_status(m)
+	isOptimal = status == MOI.OPTIMAL
+		
+	return isOptimal
 end
 
 
 
 (n,s,t,S,d1,d2,p,ph,A,d,D)=get_data("Instances_ECMA/40_USA-road-d.BAY.gr")
 
-println(plan_coupant(n,s,t,S,d1,d2,p,ph,A,d,D))
+println(plan_coupant_kp(n,s,t,S,d1,d2,p,ph,A,d,D))
