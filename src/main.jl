@@ -61,8 +61,8 @@ function main()
 
     time2 = time()
     sec = round((time() - time1), digits = 3) # on veut limiter la précision à la ms
-    ln1("Durée totale du main 1000*(time2-time1) : $(sec)s")
-    ln1("main() END")
+    println("Durée totale du main 1000*(time2-time1) : $(sec)s")
+    
 end
         
 main()
