@@ -38,7 +38,7 @@ function main()
     (n,s,t,S,d1,d2,p,ph,A,d,D)= get_data("../instances/"*parsed_args["file"])
     time1 = time()
 
-    algo = parsed_arg["algo"]
+    algo = parsed_args["algo"]
     if algo == "s"
         Static(n,s,t,S,d1,d2,p,ph,A,d,D)
 
