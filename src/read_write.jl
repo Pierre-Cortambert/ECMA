@@ -39,3 +39,5 @@ function get_data(file_name :: String)
 		end
 		
 	end
+	return (n,s,t,S,d1,d2,p,ph,A,d,D)
+end
