@@ -17,11 +17,11 @@ function parse_commandline()
             help = "Algorithme à choisir (parmi : s, bc, d, h, pc)"
             arg_type = String
             default = "none"
-        "--file","-f","instance"
+        "--file"
             help = "Nom da l'instance à considérer"
             arg_type = String
             default = "20_USA-road-d.BAY.gr"
-        "--time","-t"
+        "--time"
             help = "Temps limite de recherche de solution optimale"
             arg_type = Int
             default = 0 # pas de limitation
