@@ -87,14 +87,18 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 	@variable(m, z >= 0)
 
 	#Constraint on flow
-	@constraint(m,[i in 1:n ; i!=s && i!=t],sum(x[k,i]*A[k,i] - x[i,k]*A[i,k] for k in 1:n)==0)
+	@constraint(m,[i in 1:n ; i!=s && i!=t],sum(x[k,i] - x[i,k] for k in 1:n)==0)
+	for j in 1:n
+		@constraint(m,[i in 1:n],x[i,j] <= A[i,j])
+	end
 
 	#Constraint on source and well
-	@constraint(m, sum(x[s,k]*A[s,k] for k in 1:n) == 1)
-	@constraint(m, sum(x[k,t]*A[k,t] for k in 1:n) == 1)
+	@constraint(m,sum(x[s,k] - x[k,s] for k in 1:n)==1)
+	@constraint(m,sum(x[k,t] - x[t,k] for k in 1:n)==1)
+
 	
 	#Objectif
-	@objective(m, Min, sum(sum(x[i,j]*d[i,j]*A[i,j] for i in 1:n) for j in 1:n) + z)
+	@objective(m, Min, sum(sum(x[i,j]*d[i,j] for i in 1:n) for j in 1:n) + z)
 
 	U_1=Array{Float64, 3}(zeros(2, n,n))
 	U_2=Array{Float64, 2}(zeros(2, n))
@@ -105,10 +109,10 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 		cpt+=1
 		
 		#Constraint on cut set #1 
-		@constraint(m,sum( sum(x[i,j]*A[i,j]*d[i,j]*U_1[1,i,j] for j in 1:n) for i in 1:n)- z <= 0)
+		@constraint(m,sum( sum(x[i,j]*d[i,j]*U_1[1,i,j] for j in 1:n) for i in 1:n)- z <= 0)
 
 		#Constraint on cut set #2 
-		@constraint(m,sum( sum(x[i,j]*A[i,j]*p[i]+x[i,j]*A[i,j]*ph[i]*U_2[1,i] for j in 1:n) for i in 1:n) + p[t] + ph[t]*U_2[1,t] <= S)
+		@constraint(m,sum( sum(x[i,j]*p[i]+x[i,j]*ph[i]*U_2[1,i] for j in 1:n) for i in 1:n) + p[t] + ph[t]*U_2[1,t] <= S)
 
 		optimize!(m)
 		x_opt = JuMP.value.(x)
@@ -148,6 +152,6 @@ end
 
 
 
-(n,s,t,S,d1,d2,p,ph,A,d,D)=get_data("Instances_ECMA/20_USA-road-d.BAY.gr")
+(n,s,t,S,d1,d2,p,ph,A,d,D)=get_data("Instances_ECMA/40_USA-road-d.BAY.gr")
 
 println(plan_coupant(n,s,t,S,d1,d2,p,ph,A,d,D))
