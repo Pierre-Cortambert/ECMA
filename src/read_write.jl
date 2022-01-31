@@ -44,8 +44,8 @@ end
 
 function write_sol(algo, file, isOptimal, traj, sol, cpt , sec)
 	output_file = "../results/"*algo*"/"*file*"_score_"*string(traj)*".txt"
-	if !isdir("../results/"*algo*)
-            mkdir("../results/"*algo*)
+	if !isdir("../results/"*algo)
+            mkdir("../results/"*algo)
         end
 	f = open(outputfile, "w")
 	println(f, "Solution optimale trouvée : ",isOptimal)
