@@ -43,7 +43,7 @@ function get_data(file_name :: String)
 end
 
 function write_sol(algo, file, isOptimal, traj, sol, cpt , sec)
-	output_file = "../results/"*algo*"/"*file*"_score_"*traj*".txt"
+	output_file = "../results/"*algo*"/"*file*"_score_"*string(traj)*".txt"
 	f = open(outputfile, "w")
 	println(f, "Solution optimale trouvée : ",isOptimal)
 	println(f, "Valeur de la solution : ",traj)
