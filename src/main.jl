@@ -11,7 +11,7 @@ include("heuristic.jl")
 
 
 function parse_commandline()
-    s = ArgParseSettings()
+    settings = ArgParseSettings()
     @add_arg_table settings begin
         "--algo"
             help = "Algorithme à choisir (parmi : s, bc, d, h, pc)"
