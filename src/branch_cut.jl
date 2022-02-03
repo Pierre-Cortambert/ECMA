@@ -41,7 +41,7 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 	time1 = time()
     m=Model(CPLEX.Optimizer)
     set_silent(m)
-
+    MOI.set(m, MOI.NumberOfThreads(), 1)
     #Problème maitre
     # Var
 	@variable(m, x[1:n,1:n], Bin)
