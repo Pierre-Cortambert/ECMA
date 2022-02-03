@@ -95,7 +95,7 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 			return 
 		else
             if abs(z_1-z_opt)>1e-4
-				cstr1 = @build_constraint( sum( sum(x[i,j]*d[i,j]*(1+d1[i,j]) for j in 1:n) for i in 1:n)- z <= 0
+				cstr1 = @build_constraint( sum( sum(x[i,j]*d[i,j]*(1+d1[i,j]) for j in 1:n) for i in 1:n)- z <= 0)
                 MOI.submit(m, MOI.LazyConstraint(cb_data), cstr1)
 			end
 			if z_2 +  sum( sum(x_opt[i,j]*A[i,j]*p[i] for j in 1:n) for i in 1:n) + p[t] > S 
