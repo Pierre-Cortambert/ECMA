@@ -79,10 +79,10 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
         #cpt+=1
 		
 		#Constraint on cut set #1 
-		@constraint(m,sum( sum(x[i,j]*d[i,j]*U_1[1,i,j] for j in 1:n) for i in 1:n)- z <= 0)
+		#@constraint(m,sum( sum(x[i,j]*d[i,j]*U_1[1,i,j] for j in 1:n) for i in 1:n)- z <= 0)
 
 		#Constraint on cut set #2 
-		@constraint(m,sum( sum(x[i,j]*p[i]+x[i,j]*ph[i]*U_2[1,i] for j in 1:n) for i in 1:n) + p[t] + ph[t]*U_2[1,t] <= S)
+		#@constraint(m,sum( sum(x[i,j]*p[i]+x[i,j]*ph[i]*U_2[1,i] for j in 1:n) for i in 1:n) + p[t] + ph[t]*U_2[1,t] <= S)
 
 		optimize!(m)
 		x_opt = JuMP.value.(x)
