@@ -1,15 +1,16 @@
 using JuMP
 using CPLEX
 
+
 function spo_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d1 :: Int64, d :: Array{Int64}, D :: Array{Float64})
 	sol=Vector{Int64}(zeros(2))
 	sol[1]=s
-	sol[2]=findall(y->y==1., x[s,:])[1,1]
+	sol[2]=findall(y->abs(1-y)<1e-4, x[s,:])[1,1]
 	d_x=Vector{Float64}(zeros(1))
 	d_x[1]=d[sol[1],sol[2]]
 	i=sol[2]
 	while i!=t
-		i=findall(y->y==1., x[i,:])[1,1]
+		i=findall(y->abs(1-y)<1e-4, x[i,:])[1,1]
 		sol=vcat(sol,[i])
 		d_x=vcat(d_x,d[sol[end-1],sol[end]])
 	end
@@ -38,9 +39,9 @@ function spc_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d2 :: Int64,  ph :
 	sol[1]=s
 	p_x=Vector{Float64}(zeros(1))
 	p_x[1]=ph[s]
-	i=s
+	i=s 
 	while i!=t
-		i=findall(y->y==1., x[i,:])[1,1]
+		i=findall(y->abs(1-y)<1e-4, x[i,:])[1,1]
 		sol=vcat(sol,[i])
 		p_x=vcat(p_x,ph[i])
 	end
