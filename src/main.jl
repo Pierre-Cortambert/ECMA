@@ -55,7 +55,7 @@ function main()
         isOptimal, traj, sol, cpt = plan_coupant_kp(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
 
     elseif algo == "bc"    
-        
+        isOptimal, traj, sol, cpt = BranchCut(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
     elseif algo == :"h"
 
     elseif action == "none"
