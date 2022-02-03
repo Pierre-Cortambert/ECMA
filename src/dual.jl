@@ -5,7 +5,7 @@ export Dual
 
 function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 :: Int64, p :: Vector{Int64}, ph :: Vector{Int64}, A :: Array{Int64}, d :: Array{Int64}, D :: Array{Float64})
 
-	m = Model(CPLEX.Optimizer)
+		m = Model(CPLEX.Optimizer)
 
 	# Var
 	@variable(m, x[1:n,1:n], Bin)
@@ -27,9 +27,9 @@ function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 
 	@constraint(m,[ k in 1:n*n ], a0 + a[k] >= x[k]*d[k])
 
 	#dual robust constraint
-	@constraint(m, b0*d2 + 2 * sum(b[k] for k in 1:n) + sum(p[i]*sum(x[i,j] for j in 1:n) for i in 1:n) <= S)
+	@constraint(m, b0*d2 + 2 * sum(b[k] for k in 1:n) + sum(p[i]*sum(x[i,j] for j in 1:n) for i in 1:n) + p[t] <= S)
 
-	@constraint(m, [i in 1:n ; i!=t ], b0 + b[i] >= ph[i]*sum(x[i,k] for k in 1:n))
+	@constraint(m, [i in 1:n], b0 + b[i] >= ph[i]*sum(x[i,k] for k in 1:n))
 	@constraint(m, b0 + b[t] >= ph[t])
 
 	#Objectif
