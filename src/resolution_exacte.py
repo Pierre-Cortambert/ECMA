@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import networkx as nx
 
 def get_data(fileName):
 	file=open(fileName,"r")
@@ -94,7 +95,7 @@ def res_statique(n,s,t,S,d1,d2,p,A,d):
 	print(path[9])
 	return v[s,k_sol], path[s][k_sol]
 
-def res_robuste(n,s,t,S,d1,d2,p,ph,A,d,D):
+def res_robuste(T,n,s,t,S,d1,d2,p,ph,A,d,D):
 	if 2 >= d2:
 		S=S-d2
 		d2=0
@@ -117,27 +118,32 @@ def res_robuste(n,s,t,S,d1,d2,p,ph,A,d,D):
 	
 	t_init=time.process_time()
 	
+	tab_n=[t]
 	change=True
 	while change:
 		change=False
-		for i in range(n):
-			for j in range(n):
+		ngb=[]
+		for b in tab_n:
+			ngb+=[a for a in T[b] if a not in tab_n]
+		tab_n+=ngb
+		for i in tab_n:
+			for j in tab_n:
 				if A[i][j]==1 :
 					for k in range(S+1-p[i]):
 						#On cherche à minimiser le nombre d'appel à scp_pk
 						if v[j,k] < np.infty and d2-dlt[j][k] >=2 and k+p[i]+2*ph[i] <= S:
-							p_supp=p[i]+int(min(2,d2-dlt[j][k]))*ph[i]
+							p_supp=p[i]+2*ph[i]
 							if spo_kp(n,s,[i]+path[j][k],d1,d,D) < v[i,k+p_supp] :
 								v[i, k+p_supp ] =  spo_kp(n,s,[i]+path[j][k],d1,d,D)
 								path[i][ k+p_supp ]=[i]+path[j][k]
-								dlt[i][ k+p_supp ]=dlt[j][k]+int(min(2,d2-dlt[j][k]))
+								dlt[i][ k+p_supp ]=dlt[j][k]+2
 								change=True	
 						elif v[j,k] < np.infty and d2-dlt[j][k] <=2 and spc_kp(n,s,[i]+path[j][k],d2,p,ph) <= S:
 							p_i=spc_kp(n,s,[i]+path[j][k],d2,p,ph)
 							if spo_kp(n,s,[i]+path[j][k],d1,d,D) < v[i,p_i] :
 								v[i,p_i] =  spo_kp(n,s,[i]+path[j][k],d1,d,D)
 								path[i][p_i]=[i]+path[j][k]
-								dlt[i][p_i]=spc_kp(n,s,[i]+path[j][k],d2,p,ph)
+								dlt[i][p_i]=d2
 								change=True	
 	
 	print("Temps execution: ", time.process_time()-t_init)
@@ -146,7 +152,10 @@ def res_robuste(n,s,t,S,d1,d2,p,ph,A,d,D):
 	return v[s,k_sol], path[s][k_sol]
 					
 
-(n,s,t,S,d1,d2,p,ph,A,d,D)=get_data("Instances_ECMA/80_USA-road-d.NY.gr")
+(n,s,t,S,d1,d2,p,ph,A,d,D)=get_data("Instances_ECMA/140_USA-road-d.BAY.gr")
 
 
-print(res_robuste(n,s,t,S,d1,d2,p,ph,A,d,D))
+G = nx.from_numpy_matrix(A, create_using=nx.DiGraph)
+T = nx.bfs_tree(G, t, reverse=True)
+print(res_robuste(T,n,s,t,S,d1,d2,p,ph,A,d,D))
+
