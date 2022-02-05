@@ -56,6 +56,7 @@ function main()
 
     elseif algo == "bc"    
         isOptimal, traj, sol, cpt ,obj= BranchCut(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
+        cpt=0
     elseif algo == :"h"
 
     elseif algo == "none"
