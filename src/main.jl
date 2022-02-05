@@ -41,21 +41,21 @@ function main()
 
     algo = parsed_args["algo"]
     if algo == "s"
-        isOptimal, traj, sol = Static(n,s,t,S,d1,d2,p,ph,A,d,D)
+        isOptimal, traj, sol ,obj= Static(n,s,t,S,d1,d2,p,ph,A,d,D)
         cpt = 0
 
     elseif algo == "d"      
-        isOptimal, traj, sol = Dual(n,s,t,S,d1,d2,p,ph,A,d,D) 
+        isOptimal, traj, sol, obj = Dual(n,s,t,S,d1,d2,p,ph,A,d,D) 
         cpt = 0
     
     elseif algo == "pc"
-        isOptimal, traj, sol, cpt = plan_coupant(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])   
+        isOptimal, traj, sol, cpt ,obj= plan_coupant(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])   
     
     elseif algo == "pck"
-        isOptimal, traj, sol, cpt = plan_coupant_kp(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
+        isOptimal, traj, sol, cpt ,obj= plan_coupant_kp(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
 
     elseif algo == "bc"    
-        isOptimal, traj, sol, cpt = BranchCut(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
+        isOptimal, traj, sol, cpt ,obj= BranchCut(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
     elseif algo == :"h"
 
     elseif algo == "none"
@@ -68,7 +68,7 @@ function main()
     time2 = time()
     sec = round((time() - time1), digits = 3) # on veut limiter la précision à la ms
     println("Durée totale du main 1000*(time2-time1) : $(sec)s")
-    write_sol(algo,parsed_args["file"],isOptimal, traj, sol, cpt , sec)
+    write_sol(algo,parsed_args["file"],isOptimal, traj, sol, cpt , sec,obj)
     
 end
         

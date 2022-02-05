@@ -39,6 +39,7 @@ function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 
 	println(solution_summary(m))
 
 	traj=JuMP.value.(x)
+	obj = JuMP.objective_value(m)
 	sol=Vector{Int64}(zeros(1))
 	i=s
 	sol[1]=s
@@ -52,7 +53,7 @@ function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 
 	status = termination_status(m)
 	isOptimal = status == MOI.OPTIMAL
 		
-	return isOptimal, traj, sol
+	return isOptimal, traj, sol, obj
 end
 
 

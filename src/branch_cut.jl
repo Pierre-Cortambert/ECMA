@@ -124,7 +124,7 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 	
 	status = termination_status(m)
 	isOptimal = status == MOI.OPTIMAL
-		
-	return isOptimal, traj, sol, cpt # si solution, valeur, le chemin, nombre de coupes
+	obj = JuMP.objective_value(m)
+	return isOptimal, traj, sol, cpt,obj # si solution, valeur, le chemin, nombre de coupes
 
 end

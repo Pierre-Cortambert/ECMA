@@ -43,8 +43,8 @@ function Static(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d
 
 	status = termination_status(m)
 	isOptimal = status == MOI.OPTIMAL
-		
-	return isOptimal, traj, sol
+	obj = JuMP.objective_value(m)
+	return isOptimal, traj, sol,obj
 end
 
 

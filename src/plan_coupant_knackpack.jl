@@ -139,11 +139,11 @@ function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 ::
 	end
 	
 	println("Solution: ", sol)
-	
+	obj = JuMP.objective_value(m)
 	status = termination_status(m)
 	isOptimal = status == MOI.OPTIMAL
 		
-	return isOptimal, traj, sol, cpt # si solution, valeur, le chemin, nombre de coupes
+	return isOptimal, traj, sol, cpt ,obj # si solution, valeur, le chemin, nombre de coupes
 end
 
 
