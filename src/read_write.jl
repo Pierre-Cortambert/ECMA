@@ -44,9 +44,9 @@ end
 
 function write_sol(algo, file, isOptimal, traj, sol, cpt , sec)
 	output_folder = "../results/"*algo
-	print("output_folder : "output_folder)
+	println("output_folder : ",output_folder)
 	output_file = "../results/"*algo*"/"*file*"_score_"*string(traj)*".txt"
-	print("output_file : "output_file)
+	println("output_file : ",output_file)
 	if !isdir(output_folder)
             mkdir(output_folder)
         end
