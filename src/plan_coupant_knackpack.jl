@@ -2,7 +2,7 @@ using JuMP
 using CPLEX
 
 
-function spo_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d1 :: Int64, d :: Array{Int64}, D :: Array{Float64})
+function spo_kp(n :: Int64, s :: Int64, t :: Int64, x :: Matrix{Float64}, d1 :: Int64, d :: Array{Int64}, D :: Array{Float64})
 	sol=Vector{Int64}(zeros(2))
 	sol[1]=s
 	sol[2]=findall(y->abs(1-y)<1e-4, x[s,:])[1,1]
@@ -34,7 +34,7 @@ function spo_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d1 :: Int64, d :: 
 	return dlt, z
 end
 
-function spc_kp(n :: Int64, s :: Int64, x :: Matrix{Float64}, d2 :: Int64,  ph :: Array{Int64})
+function spc_kp(n :: Int64, s :: Int64, t :: Int64,  x :: Matrix{Float64}, d2 :: Int64,  ph :: Array{Int64})
 	sol=Vector{Int64}(zeros(1))
 	sol[1]=s
 	p_x=Vector{Float64}(zeros(1))
@@ -107,8 +107,8 @@ function plan_coupant_kp(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 ::
 		x_opt = JuMP.value.(x)
 		z_opt = JuMP.value.(z)
 		
-		dlt1, z_1 = spo_kp(n,s,x_opt,d1,d,D)
-		dlt2, z_2 = spc_kp(n,s,x_opt,d2,ph)
+		dlt1, z_1 = spo_kp(n,s,t, x_opt,d1,d,D)
+		dlt2, z_2 = spc_kp(n,s,t, x_opt,d2,ph)
 
 						
 		if abs(z_1-z_opt)<1e-4 && z_2 +  sum( sum(x_opt[i,j]*A[i,j]*p[i] for j in 1:n) for i in 1:n) + p[t] <= S 
