@@ -45,7 +45,7 @@ function main()
         cpt = 0
 
     elseif algo == "d"      
-        isOptimal, traj, sol, obj = Dual(n,s,t,S,d1,d2,p,ph,A,d,D) 
+        isOptimal, traj, sol, obj = Dual(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"]) 
         cpt = 0
     
     elseif algo == "pc"

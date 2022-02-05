@@ -3,7 +3,7 @@ using CPLEX
 
 export Dual 
 
-function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 :: Int64, p :: Vector{Int64}, ph :: Vector{Int64}, A :: Array{Int64}, d :: Array{Int64}, D :: Array{Float64})
+function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 :: Int64, p :: Vector{Int64}, ph :: Vector{Int64}, A :: Array{Int64}, d :: Array{Int64}, D :: Array{Float64},, time_max :: Float64)
 
 		m = Model(CPLEX.Optimizer)
 
@@ -35,6 +35,7 @@ function Dual(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64, d2 
 	#Objectif
 	@objective(m, Min, sum(x[i]*d[i] + a[i]*D[i] for i in 1:n*n) + d1*a0) #on a définit les D[i] à 0 quand il n'y a pas d'arête
 
+	set_time_limit_sec(m, time_max)
 	optimize!(m)
 	println(solution_summary(m))
 

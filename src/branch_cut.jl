@@ -88,6 +88,7 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 		end
     end
     MOI.set(m, CPLEX.CallbackFunction(), callback_bc)
+	set_time_limit_sec(m, time_max)
     optimize!(m)
 
 	
