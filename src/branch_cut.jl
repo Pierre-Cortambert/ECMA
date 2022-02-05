@@ -90,9 +90,6 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
     MOI.set(m, CPLEX.CallbackFunction(), callback_bc)
     optimize!(m)
 
-
-    println("Nombre de coupes: ",cpt)
-	
 	
 	traj=JuMP.value.(x)
 	sol=Vector{Int64}(zeros(1))
@@ -108,6 +105,6 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 	status = termination_status(m)
 	isOptimal = status == MOI.OPTIMAL
 	obj = JuMP.objective_value(m)
-	return isOptimal, traj, sol, cpt,obj # si solution, valeur, le chemin, nombre de coupes
+	return isOptimal, traj, sol,obj # si solution, valeur, le chemin, nombre de coupes
 
 end
