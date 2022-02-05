@@ -58,11 +58,11 @@ function main()
         isOptimal, traj, sol, cpt = BranchCut(n,s,t,S,d1,d2,p,ph,A,d,D,parsed_args["time"])  
     elseif algo == :"h"
 
-    elseif action == "none"
+    elseif algo == "none"
         println("Aucune action indiquée")
         println(Args.get_syntaxe())
     else
-        println("Erreur : action $(action) non implémentée (dans main.jl)")
+        println("Erreur : algo $(algo) non implémentée (dans main.jl)")
         return
     end
     time2 = time()
