@@ -56,7 +56,7 @@ function write_sol(algo, file, isOptimal, traj, sol, cpt , sec,obj)
 	if !isdir(output_folder)
             mkdir(output_folder)
         end
-	if !isfile(outputFile)
+	if !isfile(output_file)
 		f = open(output_file, "w")
 		println(f, "Valeur solution optimale trouvée :",obj)
 		println(f, "Solution optimale trouvée : ",isOptimal)
