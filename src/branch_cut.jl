@@ -61,8 +61,6 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 	#Objectif
 	@objective(m, Min, sum(x[i]*d[i] for i in 1:n*n) + z)
 
-	cpt=0
-
     function callback_bc(cb_data::CPLEX.CallbackContext, context_id::Clong)
 
         if context_id == CPX_CALLBACKCONTEXT_CANDIDATE
@@ -79,7 +77,7 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 			dlt2, z_2 = spc(n,t,x_opt,d2,ph)
 
 			if abs(z_1-z_opt)>1e-4
-				cstr1 = @build_constraint( sum( sum(x[i,j]*d[i,j]*(1+dlt1[i,j]) for j in 1:n) for i in 1:n)- z <= 0)
+				cstr1 = @build_constraint( sum( sum(x[i,j]*d[i,j]*dlt1[i,j]) for j in 1:n) for i in 1:n)- z <= 0)
 				MOI.submit(m, MOI.LazyConstraint(cb_data), cstr1)
 			end
 			if z_2 +  sum( sum(x_opt[i,j]*A[i,j]*p[i] for j in 1:n) for i in 1:n) + p[t] > S 
@@ -94,7 +92,7 @@ function BranchCut(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: Int64
 
 
     println("Nombre de coupes: ",cpt)
-	println(solution_summary(m))
+	
 	
 	traj=JuMP.value.(x)
 	sol=Vector{Int64}(zeros(1))
