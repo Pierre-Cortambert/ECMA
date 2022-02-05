@@ -43,15 +43,20 @@ function get_data(file_name :: String)
 end
 
 function write_sol(algo, file, isOptimal, traj, sol, cpt , sec)
+	output_folder = "../results/"*algo
+	print("output_folder : "output_folder)
 	output_file = "../results/"*algo*"/"*file*"_score_"*string(traj)*".txt"
-	if !isdir("../results/"*algo)
-            mkdir("../results/"*algo)
+	print("output_file : "output_file)
+	if !isdir(output_folder)
+            mkdir(output_folder)
         end
-	f = open(outputfile, "w")
-	println(f, "Solution optimale trouvée : ",isOptimal)
-	println(f, "Valeur de la solution : ",traj)
-	println(f, "Temps : ",sec)
-	println(f, "Solution : ",sol )
-	println(f, "Nombre de branchements : ",cpt )
-	close(f)
+	if !isfile(outputFile)
+		f = open(outputfile, "w")
+		println(f, "Solution optimale trouvée : ",isOptimal)
+		println(f, "Valeur de la solution : ",traj)
+		println(f, "Temps : ",sec)
+		println(f, "Solution : ",sol )
+		println(f, "Nombre de branchements : ",cpt )
+		close(f)
+    end	
 end
