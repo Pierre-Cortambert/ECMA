@@ -64,8 +64,8 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 	
 	not_opti = true  
 	cpt=0
-    time = round((time() - time1))
-	while not_opti && time < time_max 
+    sec = round((time() - time1))
+	while not_opti && sec < time_max 
 		cpt+=1
 		
 		#Constraint on cut set #1 
@@ -93,7 +93,7 @@ function plan_coupant(n :: Int64, s :: Int64, t :: Int64,  S :: Int64,  d1 :: In
 				U_1 = vcat(dlt1,U_1)
 			end
 		end
-		time = round((time() - time1))
+		sec = round((time() - time1))
 	end
 	
 	println("Nombre de coupes: ",cpt)
