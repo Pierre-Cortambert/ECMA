@@ -51,14 +51,14 @@ function write_sol(algo, file, isOptimal, traj, sol, cpt , sec,obj)
 	println(" sec : ", sec)
 	output_folder = "../results/"*algo
 	println("output_folder : ",output_folder)
-	output_file = "../results/"*algo*"/"*file*"_score_"*string(obj)*"_"*string(sec)*".txt"
+	output_file = "../results/"*algo*"/"*file*"_score_"*string(round(obj,digits=3))*"_"*string(sec)*".txt"
 	println("output_file : ",output_file)
 	if !isdir(output_folder)
             mkdir(output_folder)
         end
 	if !isfile(output_file)
 		f = open(output_file, "w")
-		println(f, "Valeur solution optimale trouvée :",obj)
+		println(f, "Valeur solution optimale trouvée :", round(obj,digits=3))
 		println(f, "Solution optimale trouvée : ",isOptimal)
 		println(f, "Valeur de la solution : ",traj)
 		println(f, "Temps : ",sec)
