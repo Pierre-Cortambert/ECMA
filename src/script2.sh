@@ -17,6 +17,6 @@ instances="20_USA-road-d.BAY.gr  20_USA-road-d.COL.gr  20_USA-road-d.NY.gr
 
 for algo in $algorithmes;do
     for inst in $instances; do
-        julia main.jl --algo $algo --file $inst
+        julia main.jl --algo $algo --file $inst --time 1200
     done
 done
